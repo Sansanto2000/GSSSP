@@ -1,15 +1,9 @@
 from numbers import Number
 import random
-from matplotlib import pyplot as plt
 from numpy.typing import NDArray
 from typing import Any, Callable, Tuple
 import numpy as np
 import cv2
-import sys
-
-# Alias para evitar incompativilidades con pystellibs
-import astropy.io.fits as pyfits
-sys.modules['pyfits'] = pyfits
 
 
 """Funcion que recibe la informacion de una imagen en formato
