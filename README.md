@@ -4,11 +4,11 @@ GSSSP (Generator of Synthetic Scans of Spectroscopic Plates) es un conjunto de h
 
 De cada imagen generada se provee tanto la imagen como la informacion de los elementos que contiene haciendo las imagenes adecuadas para flujos de trabajo con modelos de vision por computadora como YOLO.
 
+![Imagen sintetica de un escaneo de una placa espectroscopica con 2 observaciones.](assets/exampleGeneration3.jpg)
+
 ![Imagen sintetica de un escaneo de una placa espectroscopica con 1 observacion. En azul los limites que delimitan la posicion de la observacion generada.](assets/exampleGeneration1.jpg)
 
 ![Imagen sintetica de un escaneo de una placa espectroscopica con 4 observaciones. En azul los limites que delimitan la posicion de cada una de las observaciones generadas.](assets/exampleGeneration2.jpg)
-
-![Imagen sintetica de un escaneo de una placa espectroscopica con 2 observaciones.](assets/exampleGeneration3.jpg)
 
 ## Entorno virtual
 

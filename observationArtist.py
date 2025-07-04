@@ -92,12 +92,13 @@ def drawObservation(
     }
 
     # Preparar etiquetas en formato yolov11 para reportar al usuario
+    img_height, img_width = img.shape[:2]
     labelObservation: dict[str, Number] = {
         "class_id": 0,
-        "x_center_norm":((x_coords.min() + x_coords.max())/2)/width,
-        "y_center_norm":((y_coords.min() + y_coords.max())/2)/height,
-        "width_norm": labelForGraph["width"] / width,
-        "height_norm": labelForGraph["height"] / height,
+        "x_center_norm":((x_coords.min() + x_coords.max())/2)/img_width,
+        "y_center_norm":((y_coords.min() + y_coords.max())/2)/img_height,
+        "width_norm": labelForGraph["width"] / img_width,
+        "height_norm": labelForGraph["height"] / img_height,
     }
 
     if (debug):
