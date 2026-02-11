@@ -7,12 +7,12 @@ import os
 import numpy as np
 import random
 import cv2
-from lib.observationArtist import drawObservation, add_realistic_noise, labelDictToYolov11Format
+from utils.observationArtist import drawObservation, add_realistic_noise, labelDictToYolov11Format
 import math
 from tqdm import tqdm
 
 # Carpeta destino de las imagenes
-destiny = "D:\\Datasets\\conGSSSP_v2"
+destiny = "/Users/s.a.p.a/Documents/Datasets/conGSSSP" #"D:\\Datasets\\conGSSSP"
 
 # Cantidad de imagenes a generar
 total = 10
@@ -98,7 +98,7 @@ for nro in tqdm(range(total)):
     # Guardar imagen sintetica
     filepath = os.path.join(destiny,"images",f"{nro}.jpg")
     success = cv2.imwrite(filepath, img)
-    # cv2.imwrite('obs.jpg', obs)
+    # cv2.imwrite('obs.jpg', _obs)
     # cv2.imwrite('mask.jpg', mask)
     if not success:
         print("¡Error al guardar la imagen! Verifica la ruta y permisos.")
