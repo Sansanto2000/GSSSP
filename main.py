@@ -1,16 +1,21 @@
+'''
+Docstring for main
+Se crea una cantidad especifica de imagenes y se las almacena en la locacion destino 
+con formato YOLOv11.
+'''
 import os
 import numpy as np
 import random
 import cv2
-from observationArtist import drawObservation, add_realistic_noise, labelDictToYolov11Format
+from lib.observationArtist import drawObservation, add_realistic_noise, labelDictToYolov11Format
 import math
 from tqdm import tqdm
 
 # Carpeta destino de las imagenes
-destiny = "D:\\Datasets\\conGSSSP"
+destiny = "D:\\Datasets\\conGSSSP_v2"
 
 # Cantidad de imagenes a generar
-total = 300
+total = 10
 
 # Generar X imagenes
 for nro in tqdm(range(total)):
@@ -79,7 +84,7 @@ for nro in tqdm(range(total)):
     # Radio maximo de las manchas de polvo
     speck_size = random.randint(1,5)
     # Nivel del desenfoque gaussiano
-    speck_size = random.choice([1, 3, 5, 7, 9, 11, 13, 15])
+    blur_kernel_size = random.choice([1, 3, 5, 7, 9, 11, 13, 15])
 
     img = add_realistic_noise(
             img, 
@@ -87,7 +92,7 @@ for nro in tqdm(range(total)):
             band_intensity=band_intensity,
             speck_count=speck_count,
             speck_size=speck_size,
-            blur_ksize=speck_size,
+            blur_ksize=blur_kernel_size,
         )
 
     # Guardar imagen sintetica
