@@ -23,8 +23,13 @@ python -m venv venv
 🚀 Activar entorno virtual `.\venv`:
 
 ```
+# Windows
 .\venv\Scripts\Activate.ps1
+
+# Mac
+source venv/bin/activate
 ```
+
 
 ## Dependencias
 
