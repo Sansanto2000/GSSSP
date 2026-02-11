@@ -1,18 +1,18 @@
 # GSSSP
 
-GSSSP (Generator of Synthetic Scans of Spectroscopic Plates) es un conjunto de herramientas para la generacion de imagenes sinteticas de escaneos de placas espectroscopicas.
+GSSSP (Generator of Synthetic Scans of Spectroscopic Plates) es un conjunto de herramientas para la generación de imágenes sintéticas de escaneos de placas espectroscópicas.
 
-De cada imagen generada se provee tanto la imagen como la informacion de los elementos que contiene haciendo las imagenes adecuadas para flujos de trabajo con modelos de vision por computadora como YOLO.
+De cada imagen generada se provee tanto la imagen como la información de los elementos que contiene haciendo las imágenes adecuadas para flujos de trabajo con modelos de visión por computadora como YOLO.
 
-![Imagen sintetica de un escaneo de una placa espectroscopica con 2 observaciones.](assets/exampleGeneration3.jpg)
+![Imagen sintética de un escaneo de una placa espectroscópica con 2 observaciones.](assets/exampleGeneration3.jpg)
 
-![Imagen sintetica de un escaneo de una placa espectroscopica con 1 observacion. En azul los limites que delimitan la posicion de la observacion generada.](assets/exampleGeneration1.jpg)
+![Imagen sintética de un escaneo de una placa espectroscópica con 1 observación. En azul los limites que delimitan la posición de la observación generada.](assets/exampleGeneration1.jpg)
 
-![Imagen sintetica de un escaneo de una placa espectroscopica con 4 observaciones. En azul los limites que delimitan la posicion de cada una de las observaciones generadas.](assets/exampleGeneration2.jpg)
+![Imagen sintética de un escaneo de una placa espectroscópica con 4 observaciones. En azul los limites que delimitan la posición de cada una de las observaciones generadas.](assets/exampleGeneration2.jpg)
 
 ## Entorno virtual
 
-Se recomienda usar un entorno virtual para manejar las dependencias de la libraria de generación.
+Se recomienda usar un entorno virtual para manejar las dependencias de la libreria de generación.
 
 🔨 Crear entorno virtual `.\venv`:
 
@@ -28,7 +28,7 @@ python -m venv venv
 
 ## Dependencias
 
-📦 Instala las dependencias neceasrias con:
+📦 Instala las dependencias necesarias con:
 
 ```
 pip install -r requirements.txt
@@ -46,7 +46,7 @@ Cada imagen producida tiene un archivo de etiquetas con información de los lím
 
 ### Compatible con TensorFlow.
 
-En `generators\spectrumLabeledSequence` se encuentra un generador compatible con la librería TensorFlow. El archivo `generator_use_example.py` muestra un ejemplo de como usarla para generar y almacenar archivos, este puede ser usado como se muestra a continuacion. 
+En `generators\spectrumLabeledSequence` se encuentra un generador compatible con la librería TensorFlow. El archivo `generator_use_example.py` muestra un ejemplo de como usarla para generar y almacenar archivos, este puede ser usado como se muestra a continuación. 
 
 ```
 python -m generator_use_example
@@ -57,6 +57,6 @@ Su propósito es ser usada como alimentador dentro de la función **fit()** de T
 Los datos generados por la misma siempre son redimensionados a una dimensión objetivo (se puede especificar). No obstante, si se quieren imágenes sin redimensionar la opción anterior es la correcta.
 
 
-## Libreria de generación
+## Librería de generación
 
-`observationArtist.py` encapsula funciones utiles para el dibujado de observaciones en archivos.
+`observationArtist.py` encapsula funciones útiles para el dibujado de observaciones en archivos.
