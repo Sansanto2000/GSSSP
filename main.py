@@ -21,8 +21,8 @@ total = 10
 for nro in tqdm(range(total)):
 
     # Dimensiones deseadas.
-    alto = random.randint(1000, 4000)
-    ancho = random.randint(1000, 4000)
+    alto = random.randint(500, 2000)
+    ancho = random.randint(500, 2000)
 
     # Imagen base oscura completa.
     gray_value = np.random.randint(0, 0.15*255)
@@ -82,7 +82,7 @@ for nro in tqdm(range(total)):
     # Cantidad de manchas de polvo
     speck_count = random.randint(0,10)
     # Radio maximo de las manchas de polvo
-    speck_size = random.randint(1,5)
+    speck_size = random.randint(1,15)
     # Nivel del desenfoque gaussiano
     blur_kernel_size = random.choice([1, 3, 5, 7, 9, 11, 13, 15])
 
