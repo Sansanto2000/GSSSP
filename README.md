@@ -26,6 +26,9 @@ python -m venv venv
 # Windows
 .\venv\Scripts\Activate.ps1
 
+# Linux
+source venv/bin/activate
+
 # Mac
 source venv/bin/activate
 ```
