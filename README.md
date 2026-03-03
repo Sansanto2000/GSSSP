@@ -10,44 +10,17 @@ De cada imagen generada se provee tanto la imagen como la información de los el
 
 ![Imagen sintética de un escaneo de una placa espectroscópica con 4 observaciones. En azul los limites que delimitan la posición de cada una de las observaciones generadas.](assets/exampleGeneration2.jpg)
 
-## Entorno virtual
 
-Se recomienda usar un entorno virtual para manejar las dependencias de la libreria de generación.
+# Entorno virtual
 
-🔨 Crear entorno virtual `.\venv`:
-
-```
-python -m venv venv
-```
-
-🚀 Activar entorno virtual `.\venv`:
-
-```
-# Windows
-.\venv\Scripts\Activate.ps1
-
-# Linux
-source venv/bin/activate
-
-# Mac
-source venv/bin/activate
-```
-
-
-## Dependencias
-
-📦 Instala las dependencias necesarias con:
-
-```
-pip install -r requirements.txt
-```
+Se recomienda usar uv para la administración del entorno virtual.
 
 ## Generar
 
 La carpeta contiene un archivo `main.py` que contiene el código experimental para la generación automática de imágenes de observaciones.
 
 ```
-python -m main
+uv run main.py
 ```
 
 Cada imagen producida tiene un archivo de etiquetas con información de los límites de la imagen que definen cada observación individual y los espectros de ciencia y/o de lámparas de comparación que haya en la misma.
@@ -57,7 +30,7 @@ Cada imagen producida tiene un archivo de etiquetas con información de los lím
 En `generators\spectrumLabeledSequence` se encuentra un generador compatible con la librería TensorFlow. El archivo `generator_use_example.py` muestra un ejemplo de como usarla para generar y almacenar archivos, este puede ser usado como se muestra a continuación. 
 
 ```
-python -m generator_use_example
+uv run generator_use_example.py 
 ```
 
 Su propósito es ser usada como alimentador dentro de la función **fit()** de TensorFlow.
