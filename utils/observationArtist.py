@@ -330,14 +330,27 @@ def add_realistic_noise(
     img_noisy = np.clip(img_noisy, 0, 255).astype(np.uint8)
     return img_noisy
 
-"""Recibe la informacion de una etiqueta en formato dict y la convierte a un 
-string en formato Yolov11.
 
-Parametros:
-- label {dict[str, Number]}: informacion de la etiqueta a parsear.
-
-Return:
-- {str}: información de la etiqueta en formato textual
-"""
 def labelDictToYolov11Format(label) -> str:
+    """Recibe la informacion de una etiqueta en formato dict y la convierte a un 
+    string en formato Yolov11.
+
+    Parametros:
+    - label {dict[str, Number]}: informacion de la etiqueta a parsear.
+
+    Return:
+    - {str}: información de la etiqueta en formato textual
+    """
     return f"{label['class_id']} {label['x_center_norm']:.6f} {label['y_center_norm']:.6f} {label['width_norm']:.6f} {label['height_norm']:.6f}"
+
+def labelListToYolov11Format(label) -> str:
+    """Recibe la informacion de una etiqueta en formato list y la convierte a un 
+    string en formato Yolov11.
+
+    Parametros:
+    - label {dict[str, Number]}: informacion de la etiqueta a parsear.
+
+    Return:
+    - {str}: información de la etiqueta en formato textual
+    """
+    return f"{label[0]} {label[1]:.6f} {label[2]:.6f} {label[3]:.6f} {label[4]:.6f}"

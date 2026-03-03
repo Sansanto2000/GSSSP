@@ -1,6 +1,6 @@
 from keras.utils import Sequence
 import numpy as np
-from lib.observationArtist import drawObservation, add_realistic_noise, labelDictToYolov11Format
+from utils.observationArtist import drawObservation, add_realistic_noise
 import random
 import numpy as np
 import math
