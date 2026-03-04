@@ -303,7 +303,7 @@ requires-dist = [
     { name = "kiwisolver", specifier = "==1.4.7" },
     { name = "matplotlib", specifier = "==3.7.5" },
     { name = "numpy", specifier = "==1.24.3" },
-    { name = "opencv-python", specifier = "==4.11.0.86" },
+    { name = "opencv-python", specifier = ">=4.8.1,<4.12" },
     { name = "packaging", specifier = "==25.0" },
     { name = "pillow", specifier = "==10.4.0" },
     { name = "pyparsing", specifier = "==3.1.4" },
