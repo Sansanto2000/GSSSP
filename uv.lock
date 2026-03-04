@@ -301,7 +301,7 @@ requires-dist = [
     { name = "importlib-resources", specifier = "==6.4.5" },
     { name = "keras-cv", specifier = ">=0.9.0" },
     { name = "kiwisolver", specifier = "==1.4.7" },
-    { name = "matplotlib", specifier = "==3.7.5" },
+    { name = "matplotlib", specifier = ">=3.7.5,<3.11" },
     { name = "numpy", specifier = "==1.24.3" },
     { name = "opencv-python", specifier = ">=4.8.1,<4.12" },
     { name = "packaging", specifier = "==25.0" },
