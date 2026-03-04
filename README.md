@@ -13,7 +13,7 @@ De cada imagen generada se provee tanto la imagen como la información de los el
 
 # Entorno virtual
 
-Se recomienda usar uv para la administración del entorno virtual.
+Se recomienda usar *uv* para la administración del entorno virtual.
 
 ## Generar
 
@@ -30,10 +30,14 @@ Cada imagen producida tiene un archivo de etiquetas con información de los lím
 En `generators\spectrumLabeledSequence` se encuentra un generador compatible con la librería TensorFlow. El archivo `generator_use_example.py` muestra un ejemplo de como usarla para generar y almacenar archivos, este puede ser usado como se muestra a continuación. 
 
 ```
-uv run generator_use_example.py 
+uv run generator_save_images_example.py
 ```
 
-Su propósito es ser usada como alimentador dentro de la función **fit()** de TensorFlow.
+Su propósito es ser usada como alimentador dentro de la función **fit()** de TensorFlow. El archivo `generator_fit_example.py` muestra un ejemplo de como conectarlo con un modelo de detección. Se puede ejecutar con el siguiente comando.
+
+```
+uv run generator_fit_example.py
+```
 
 Los datos generados por la misma siempre son redimensionados a una dimensión objetivo (se puede especificar). No obstante, si se quieren imágenes sin redimensionar la opción anterior es la correcta.
 

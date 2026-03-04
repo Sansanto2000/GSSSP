@@ -4,8 +4,13 @@ from utils.observationArtist import drawObservation, add_realistic_noise
 import random
 import numpy as np
 import math
-from numbers import Number
 import cv2
+from enum import Enum
+import tensorflow as tf
+
+class OutputFormat(Enum):
+  LIST = 0
+  DICT = 1
 
 """Generador compatible con tensorflow para alimentar modelos 
 de aprendizaje automatico. 
@@ -37,6 +42,8 @@ class SpectrumLabeledSequence(Sequence):
   - batch_size: cantidad de elementos por lote.
   - resize_shape: dimensiones (ancho, alto) para las imagenes finales.
   - max_predictions: cantidad maxima de predicciones que puede haber en una imagen.
+  - output_format: formato de datos de salida.
+  - batchs_per_sequence: cantidad de lotes a producir en una secuencia.
   """
   def __init__(
       self, *, 
@@ -57,8 +64,12 @@ class SpectrumLabeledSequence(Sequence):
       blur_kernel_size_options = [1, 3, 5, 7, 9, 11, 13, 15],
       batch_size = 128,
       resize_shape = (640, 640),
-      max_predictions = 50
+      max_predictions = 50,
+      output_format:OutputFormat = OutputFormat.LIST,
+      batchs_per_sequence = 100,
+      **kwargs
     ):
+    super().__init__(**kwargs)
     
     self.height_range = height_range
     self.width_range = width_range
@@ -78,11 +89,14 @@ class SpectrumLabeledSequence(Sequence):
     self.batch_size = batch_size
     self.resize_shape = resize_shape
     self.max_predictions = max_predictions
+    self.output_format = output_format
+    self.batchs_per_sequence = batchs_per_sequence
+
 
   # Number of batch in the Sequence.
   def __len__(self):
     #return math.ceil((self.max_index - (self.min_index + self.lookback)) / self.batch_size)
-    return 500
+    return self.batchs_per_sequence
 
   # Obtener el lote numero idx
   def __getitem__(self, idx):
@@ -181,22 +195,46 @@ class SpectrumLabeledSequence(Sequence):
       img = cv2.resize(img, (self.resize_shape[0], self.resize_shape[1]))
       batch_x.append(img)
       
-      # Ajustar dimension maxima etiquetas
-      labels_padded = np.zeros((self.max_predictions, 5), dtype=np.float32)
-      for i, label in enumerate(labels):
-          labels_padded[i] = [
-            label['class_id'], 
-            label['x_center_norm'], 
-            label['y_center_norm'], 
-            label['width_norm'], 
-            label['height_norm']
-          ]
-      batch_y.append(labels_padded)
+      # Ajustar formato
+      boxes_img = []
+      classes_img = []
+      for label in labels:
+          boxes_img.append([
+              label['x_center_norm'],
+              label['y_center_norm'],
+              label['width_norm'],
+              label['height_norm']
+          ])
+          classes_img.append(label['class_id'])
+      batch_y.append({
+          "boxes": boxes_img,
+          "classes": classes_img
+      })
 
+    ### Fomato de salida final ###
     # Imagenes
     samples = np.array(batch_x)
-
-    # Arreglo de etiquetas de cada imagen
-    targets =np.array(batch_y)
+    # Etiquetas
+    boxes_batch = [item["boxes"] for item in batch_y]
+    classes_batch = [item["classes"] for item in batch_y]
+    match(self.output_format):
+      case OutputFormat.LIST:
+        combined = []
+        for boxes, classes in zip(boxes_batch, classes_batch):
+            img_labels = []
+            for cls, box in zip(classes, boxes):
+                img_labels.append([cls, *box])
+            combined.append(img_labels)
+        targets = tf.ragged.constant(combined, dtype=tf.float32)
+      case OutputFormat.DICT:
+        targets = {
+            "boxes": tf.ragged.constant(
+              boxes_batch, 
+              ragged_rank=1, 
+              inner_shape=(4,), 
+              dtype=tf.float32
+            ),
+            "classes": tf.ragged.constant(classes_batch, dtype=tf.float32),
+        }
 
     return samples, targets

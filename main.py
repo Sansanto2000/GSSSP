@@ -12,10 +12,10 @@ import math
 from tqdm import tqdm
 
 # Carpeta destino de las imagenes
-destiny = "/Users/s.a.p.a/Documents/Datasets/conGSSSP" #"D:\\Datasets\\conGSSSP"
+destiny = "/mnt/data3/sponte/datasets/conGSSSP.test" #"D:\\Datasets\\conGSSSP"
 
 # Cantidad de imagenes a generar
-total = 10
+total = 1600
 
 # Generar X imagenes
 for nro in tqdm(range(total)):
