@@ -5,7 +5,7 @@ Se usa el generador SpectrumLabeledSequence para realizar un entrenamiento con T
 
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"    # Ocultar mensajes de advertencia
-from generators.spectrumLabeledSequence import OutputFormat, SpectrumLabeledSequence
+from src.gsssp.generators.spectrumLabeledSequence import OutputFormat, SpectrumLabeledSequence
 from keras.optimizers import Adam
 import tensorflow as tf
 

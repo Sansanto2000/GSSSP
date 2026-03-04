@@ -7,7 +7,7 @@ import os
 import numpy as np
 import random
 import cv2
-from utils.observationArtist import drawObservation, add_realistic_noise, labelDictToYolov11Format
+from src.gsssp.observationArtist import drawObservation, add_realistic_noise, labelDictToYolov11Format
 import math
 from tqdm import tqdm
 

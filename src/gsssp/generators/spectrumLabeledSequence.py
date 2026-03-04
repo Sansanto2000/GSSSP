@@ -1,6 +1,6 @@
 from keras.utils import Sequence
 import numpy as np
-from utils.observationArtist import drawObservation, add_realistic_noise
+from src.gsssp.observationArtist import drawObservation, add_realistic_noise
 import random
 import numpy as np
 import math

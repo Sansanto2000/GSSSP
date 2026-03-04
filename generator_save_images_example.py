@@ -7,9 +7,9 @@ compatible con Tensorflow.
 import os
 import cv2
 from tqdm import tqdm
-from utils.observationArtist import labelListToYolov11Format
+from src.gsssp.observationArtist import labelListToYolov11Format
 import numpy as np
-from generators.spectrumLabeledSequence import SpectrumLabeledSequence
+from src.gsssp.generators.spectrumLabeledSequence import SpectrumLabeledSequence
 
 DESTINY = '/mnt/data3/sponte/datasets/conGSSSP.test' # "D:\\Datasets\\conGSSSP_v2"
 BATCHT_SIZE = 16
