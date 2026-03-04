@@ -12,10 +12,10 @@ import math
 from tqdm import tqdm
 
 # Carpeta destino de las imagenes
-destiny = "/mnt/data3/sponte/datasets/conGSSSP.test" #"D:\\Datasets\\conGSSSP"
+destiny = "/Users/s.a.p.a/Documents/Datasets/conGSSSP.test" #"/mnt/data3/sponte/datasets/conGSSSP.test" #"D:\\Datasets\\conGSSSP"
 
 # Cantidad de imagenes a generar
-total = 1600
+total = 10
 
 # Generar X imagenes
 for nro in tqdm(range(total)):
@@ -28,21 +28,21 @@ for nro in tqdm(range(total)):
     gray_value = np.random.randint(0, 0.15*255)
     img = np.full((alto, ancho, 3), gray_value, dtype=np.uint8)
 
-    # Ancho de la observacion que varia en relacion al ancho total disponible.
-    obs_width = random.randint(int(ancho*0.4), int(ancho*0.99))
-    # Alto total de la observacion que varia en relacion al ancho de la misma.
-    obs_heigth = random.randint(int(obs_width*0.1), int(obs_width*0.4))
+    # Ancho de la observacion que varia en relacion a la ancho disponible.
+    obs_width = random.randint(int(ancho*0.4), int(ancho*0.95))
+    # Alto total de la observacion que varia en relacion al alto disponible.
+    obs_heigth = random.randint(int(alto*0.1), int(alto*0.8))
     # Inclinacion de la observacion.
-    angle = random.randint(-5, 5)
+    angle = random.randint(-3, 3)
     # Que tan anchas van a ser los espectros de lampara en relacion al espectro de ciencia
-    openingLamp = random.uniform(0.1,0.35)
+    openingLamp = random.uniform(0.1,0.45)
     # Cuanto espacio vacio hay entre cada lampara y el espectro de ciencia.
-    distanceBetweenParts = random.uniform(0.02,0.1)
+    distanceBetweenParts = random.uniform(0.001,0.1)
 
     # Distancia entre distintas observaciones
-    distanceBetweenObservations = random.uniform(obs_heigth*0.1, obs_heigth*0.8)
+    distanceBetweenObservations = random.uniform(obs_heigth*0.01, obs_heigth*0.8)
     # Cantidad de observaciones que entran en la imagen
-    max_observations = math.floor(alto*0.9/(obs_heigth+distanceBetweenObservations))
+    max_observations = math.floor(alto*0.95/(obs_heigth+distanceBetweenObservations/2))
     # Cuantas observaciones se dibujaran en una la imagen
     n_observations = min(max_observations, random.randint(1, 5))
     # Posiciones donde ser realizara el dibujo centradas en alto

@@ -20,9 +20,15 @@ dependencies = [
     "pyparsing==3.1.4",
     "python-dateutil==2.9.0.post0",
     "six==1.17.0",
-    "tensorflow[and-cuda]==2.16.1",
     "tqdm==4.67.1",
     "zipp==3.20.2",
+    
+    # macOS (Apple Silicon)
+    "tensorflow-macos==2.16.1 ; sys_platform == 'darwin'",
+    "tensorflow-metal ; sys_platform == 'darwin'",
+
+    # Linux (GPU NVIDIA)
+    "tensorflow[and-cuda]==2.16.1 ; sys_platform == 'linux'",
 ]
 
 [build-system]

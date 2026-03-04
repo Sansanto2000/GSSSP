@@ -51,9 +51,9 @@ class SpectrumLabeledSequence(Sequence):
       width_range = (1000, 4000), 
       gray_value_range = (0, 0.15), 
       angle_range = (-5, 5), 
-      opening_lamp_range = (0.1, 0.35), 
-      distance_between_components_range = (0.02, 0.1),
-      distance_between_observations_range = (0.1, 0.8), 
+      opening_lamp_range = (0.1, 0.45), 
+      distance_between_components_range = (0.001, 0.1),
+      distance_between_observations_range = (0.05, 0.8), 
       cant_observations_max = 5,
       noise_horizontal = 0.01, 
       noise_vertical = 0.01, 
@@ -115,9 +115,9 @@ class SpectrumLabeledSequence(Sequence):
 
       ### Observacion ###
       # Ancho de la observacion que varia en relacion al ancho total disponible.
-      obs_width = random.randint(int(ancho*0.4), int(ancho*0.99))
+      obs_width = random.randint(int(ancho*0.4), int(ancho*0.95))
       # Alto total de la observacion que varia en relacion al ancho de la misma.
-      obs_heigth = random.randint(int(obs_width*0.1), int(obs_width*0.4))
+      obs_heigth = random.randint(int(alto*0.1), int(alto*0.8))
       # Inclinacion de la observacion.
       angle = random.randint(*self.angle_range)
       # Que tan anchas van a ser los espectros de lampara en relacion al espectro de ciencia
@@ -132,7 +132,7 @@ class SpectrumLabeledSequence(Sequence):
         obs_heigth*self.distance_between_observations_range[1]
       )
       # Cantidad de observaciones que entran en la imagen
-      max_observations = math.floor(alto*0.9/(obs_heigth+distanceBetweenObservations))
+      max_observations = math.floor(alto*0.95/(obs_heigth+distanceBetweenObservations/2))
       # Cuantas observaciones se dibujaran en una la imagen
       n_observations = min(max_observations, random.randint(1, self.cant_observations_max+1))
 
