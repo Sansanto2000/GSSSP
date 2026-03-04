@@ -5,53 +5,51 @@ from typing import Any, Callable, Tuple
 import numpy as np
 import cv2
 
-
-"""Funcion que recibe la informacion de una imagen en formato
-matricial y dibuja una observacion en la misma acorde a las 
-cordenadas especificadas.
-IMPORTANTE: a menos que se especifique la funcion modifica la 
-matriz recibida en vez de hacer una copia.
-IMPORTANTE: se espera que la imagen base sea oscura, para pintar
-la observacion se sigue una estrategia de pixel mas alto, si el 
-fondo en una parte que se superpone con la observacion tiene un
-color mas claro entonces se pinta el pixel del fondo. Esto es 
-para que la observacion pintada se mezcle bien con la imagen.
-
-params:
-- img {NDArray[np.uint8]}: matriz de pixeles que representa la 
-imagen.
-- x {int}: coordenada horizontal central donde se dibujara el espectro.
-- y {int}: coordenada vertical central donde se dibujara el espectro.
-- width {int}: ancho de la observación a dibujar.
-- height {int}: alto de la observación a dibujar.
-- openingLamp {float}: apertura porcentual de la lampara. (0, 0.5) acorde 
-al alto de la observacion.
-- distanceBetweenParts {float}: distancia porcentual entre partes de un 
-espectro. (0, 0.33) acorde al alto de la observacion.
-- angle {int}?: angulo de inclinacion de la observacion a dibujar.
-- inplace {bool}?: condicion que indica si se realizaran los cambios
-sobre la imagen recibida o sobre una copia. Default True.
-- baseGrey {int}?: nivel de gris minimo a considerar. Default 1.
-- debug {bool}?: al activar se pinta las cajas delimitadoras de la observacion
-generada sobre la imagen. Default False.
-
-return 
-- {NDArray[np.uint8]}: matriz de pixeles que representa la 
-imagen con la observacion agregada.
-- {NDArray[np.uint8]}: matriz de pixeles que representa solo la observacion
-generada acorde a las dimensiones de la imagen recibida. Todos los pixeles que
-no corresponden a la observación son 0.
-- {NDArray[np.uint8]}: mascara de locación del espectro.
-- {dict[str, Number]}: informacion de caja delimitadora de la observación (formato
-yolov11).
-"""
-
 def drawObservation(
         img: NDArray[np.uint8], 
         x:int, y:int, width:int, height:int, 
         opening:float, distanceBetweenParts:float,
         angle:int=0, inplace:bool=True, 
         baseGrey:int = 1, debug:bool=True) -> NDArray[np.uint8]:
+    """Funcion que recibe la informacion de una imagen en formato
+    matricial y dibuja una observacion en la misma acorde a las 
+    cordenadas especificadas.
+    IMPORTANTE: a menos que se especifique la funcion modifica la 
+    matriz recibida en vez de hacer una copia.
+    IMPORTANTE: se espera que la imagen base sea oscura, para pintar
+    la observacion se sigue una estrategia de pixel mas alto, si el 
+    fondo en una parte que se superpone con la observacion tiene un
+    color mas claro entonces se pinta el pixel del fondo. Esto es 
+    para que la observacion pintada se mezcle bien con la imagen.
+
+    params:
+    - img {NDArray[np.uint8]}: matriz de pixeles que representa la 
+    imagen.
+    - x {int}: coordenada horizontal central donde se dibujara el espectro.
+    - y {int}: coordenada vertical central donde se dibujara el espectro.
+    - width {int}: ancho de la observación a dibujar.
+    - height {int}: alto de la observación a dibujar.
+    - openingLamp {float}: apertura porcentual de la lampara. (0, 0.5) acorde 
+    al alto de la observacion.
+    - distanceBetweenParts {float}: distancia porcentual entre partes de un 
+    espectro. (0, 0.33) acorde al alto de la observacion.
+    - angle {int}?: angulo de inclinacion de la observacion a dibujar.
+    - inplace {bool}?: condicion que indica si se realizaran los cambios
+    sobre la imagen recibida o sobre una copia. Default True.
+    - baseGrey {int}?: nivel de gris minimo a considerar. Default 1.
+    - debug {bool}?: al activar se pinta las cajas delimitadoras de la observacion
+    generada sobre la imagen. Default False.
+
+    return 
+    - {NDArray[np.uint8]}: matriz de pixeles que representa la 
+    imagen con la observacion agregada.
+    - {NDArray[np.uint8]}: matriz de pixeles que representa solo la observacion
+    generada acorde a las dimensiones de la imagen recibida. Todos los pixeles que
+    no corresponden a la observación son 0.
+    - {NDArray[np.uint8]}: mascara de locación del espectro.
+    - {dict[str, Number]}: informacion de caja delimitadora de la observación (formato
+    yolov11).
+    """
     
     if not inplace:
         img = img.copy()
@@ -181,29 +179,30 @@ def drawObservation(
     return img, onlyObservation, maskObservation, labelObservation
 
 
-"""Genera una funcion que representa un espectro de ciencia sintetico.
 
-Parametros:
-- width {int}: ancho que tienen que cubrir los resultados.
-- noise_level {float}: Amplitud del ruido base (sobre 255).
-- n_peaks {int}: cantidad de picos a simular.
-- baseline {int}: valor minimo.
-- vertical_noise_level {float}?: Amplitud del ruido base vertical (sobre 255).
-Default 0.2.
-- peak_spread {float}?: multiplicador que afecta al ancho de los picos simulados. 
-Default 1.0.
-- n_absorption_lines {int}?: cantidad de lineas de absorción a simular. Default 0.
-- absorption_lines_spread {float}?: multiplicador que afecta al ancho de los las 
-lineas de absorcion simuladas. Default 1.0.
-
-Return:
-- {Callable[[int], int]}: funcion que dado un valor entero informa la intensidad
-que le corresponde.
-"""
 def spectral_function(width:int, noise_level:float, n_peaks:int, baseline:int, 
                       vertical_noise_level:float=0.2, peak_spread:float=1.0, 
                       n_absorption_lines:int=0, 
                       absorption_lines_spread:float = 1.0) -> Callable[[int], int]:
+    """Genera una funcion que representa un espectro de ciencia sintetico.
+
+    Parametros:
+    - width {int}: ancho que tienen que cubrir los resultados.
+    - noise_level {float}: Amplitud del ruido base (sobre 255).
+    - n_peaks {int}: cantidad de picos a simular.
+    - baseline {int}: valor minimo.
+    - vertical_noise_level {float}?: Amplitud del ruido base vertical (sobre 255).
+    Default 0.2.
+    - peak_spread {float}?: multiplicador que afecta al ancho de los picos simulados. 
+    Default 1.0.
+    - n_absorption_lines {int}?: cantidad de lineas de absorción a simular. Default 0.
+    - absorption_lines_spread {float}?: multiplicador que afecta al ancho de los las 
+    lineas de absorcion simuladas. Default 1.0.
+
+    Return:
+    - {Callable[[int], int]}: funcion que dado un valor entero informa la intensidad
+    que le corresponde.
+    """
 
     x = np.arange(width)
 
@@ -256,19 +255,19 @@ def spectral_function(width:int, noise_level:float, n_peaks:int, baseline:int,
     
     return intensity
 
-"""Rotar un punto en relacion centro segun la formula de rotacion 2D.
-
-Parametros:
-- x {Number}: X del punto a rotar.
-- y {Number}: Y del punto a rotar.
-- cx {Number}: X del centro.
-- cy {Number}: Y del centro.
-- angle_degrees {Number}: angulo de rotación (en grados).
-
-Return:
-- {Tuple[Number,Number]}: punto luego de rotar.
-"""
 def rotate_point(x:Number, y, cx, cy, angle_degrees) -> Tuple[Number,Number]:
+    """Rotar un punto en relacion centro segun la formula de rotacion 2D.
+
+    Parametros:
+    - x {Number}: X del punto a rotar.
+    - y {Number}: Y del punto a rotar.
+    - cx {Number}: X del centro.
+    - cy {Number}: Y del centro.
+    - angle_degrees {Number}: angulo de rotación (en grados).
+
+    Return:
+    - {Tuple[Number,Number]}: punto luego de rotar.
+    """
     theta = np.radians(angle_degrees)
 
     # Trasladar el punto para que el centro sea el origen
@@ -282,19 +281,6 @@ def rotate_point(x:Number, y, cx, cy, angle_degrees) -> Tuple[Number,Number]:
     # Trasladar de vuelta
     return rx + cx, ry + cy
 
-
-
-"""Añadir ruido realista a una imagen.
-
-Parametros:
-- gaussian_std {float}?: ruido gaussiano. Simula imperfecciones naturales del sensor 
-o de la pelicula fotografica. Se basa en una distribucion normal o gaussiana. Default 10.0.
-- band_intensity {float}?: ruido de banda (horizontal o vertical). Default 5.0.
-- speck_count {int}?: cantidad de manchas de impuresa a simular.
-- speck_size {int}?: tamaño maximo de mancha de impuresa. Default 3.
-- blur_ksize {int}?: tamaño del kernel para desenfoque gaussiano. Debe ser impar, con 0 
-u otro valor invalido no se aplica ningun desenfoque. Default 3.
-"""
 def add_realistic_noise(
     img: NDArray[np.uint8],
     gaussian_std: float = 10.0,
@@ -303,6 +289,17 @@ def add_realistic_noise(
     speck_size: int = 3,
     blur_ksize: int = 3,
 ) -> NDArray[np.uint8]:
+    """Añadir ruido realista a una imagen.
+
+    Parametros:
+    - gaussian_std {float}?: ruido gaussiano. Simula imperfecciones naturales del sensor 
+    o de la pelicula fotografica. Se basa en una distribucion normal o gaussiana. Default 10.0.
+    - band_intensity {float}?: ruido de banda (horizontal o vertical). Default 5.0.
+    - speck_count {int}?: cantidad de manchas de impuresa a simular.
+    - speck_size {int}?: tamaño maximo de mancha de impuresa. Default 3.
+    - blur_ksize {int}?: tamaño del kernel para desenfoque gaussiano. Debe ser impar, con 0 
+    u otro valor invalido no se aplica ningun desenfoque. Default 3.
+    """
     img_noisy = img.astype(np.float32)
 
     # 1. Ruido gaussiano (general)
