@@ -65,6 +65,9 @@ class SpectrumLabeledSequence(Sequence):
       batch_size = 128,
       resize_shape = (640, 640),
       max_predictions = 50,
+      violin_line_include:bool = True,
+      violin_intensity_range = (0.1, 1.0),
+      violin_length_range = (0.05, 0.7),
       output_format:OutputFormat = OutputFormat.LIST,
       batchs_per_sequence = 100,
       **kwargs
@@ -89,9 +92,11 @@ class SpectrumLabeledSequence(Sequence):
     self.batch_size = batch_size
     self.resize_shape = resize_shape
     self.max_predictions = max_predictions
+    self.violin_line_include = violin_line_include
     self.output_format = output_format
     self.batchs_per_sequence = batchs_per_sequence
-
+    self.violin_intensity_range = violin_intensity_range
+    self.violin_length_range = violin_length_range
 
   # Number of batch in the Sequence.
   def __len__(self):
@@ -179,6 +184,15 @@ class SpectrumLabeledSequence(Sequence):
       speck_size = random.randint(*self.speck_size_range)
       # Nivel del desenfoque gaussiano
       blur_kernel_size = random.choice(self.blur_kernel_size_options)
+      # Cantidad de manchas alargadas tipo "violín"
+      violin_line_count = np.random.choice(
+          [0, 1, 2],
+          p=[0.70, 0.25, 0.05]
+        ) if self.violin_line_include else 0
+      # Intensidad de las manchas alargadas tipo "violín"
+      violin_intensity = random.uniform(0.1, 1.0)
+      # Rango porcentual de longitud de las manchas alargadas tipo "violín"
+      violin_length_range = (0.05, 0.7)
       # Añadir ruido en la imagen
       img = add_realistic_noise(
         img, 
@@ -187,6 +201,9 @@ class SpectrumLabeledSequence(Sequence):
         speck_count=speck_count,
         speck_size=speck_size,
         blur_ksize=blur_kernel_size,
+        violin_line_count=violin_line_count,
+        violin_intensity=violin_intensity,
+        violin_length_range=violin_length_range
       )
 
       # 1. Normalización de la imagen para YOLO

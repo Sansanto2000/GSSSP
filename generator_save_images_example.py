@@ -11,9 +11,9 @@ from src.gsssp.observationArtist import labelListToYolov11Format
 import numpy as np
 from src.gsssp.generators.spectrumLabeledSequence import SpectrumLabeledSequence
 
-DESTINY = '/mnt/data3/sponte/datasets/conGSSSP.test' # "D:\\Datasets\\conGSSSP_v2"
+DESTINY = '/Users/s.a.p.a/Documents/Datasets/conGSSSP.test' # '/mnt/data3/sponte/datasets/conGSSSP.test' # "D:\\Datasets\\conGSSSP_v2"
 BATCHT_SIZE = 16
-BATCHT_CANT = 2
+BATCHT_CANT = 1
 
 spectrum_gen = SpectrumLabeledSequence(
     height_range=(500,1500),

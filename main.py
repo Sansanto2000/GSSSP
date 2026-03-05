@@ -85,6 +85,15 @@ for nro in tqdm(range(total)):
     speck_size = random.randint(1,15)
     # Nivel del desenfoque gaussiano
     blur_kernel_size = random.choice([1, 3, 5, 7, 9, 11, 13, 15])
+    # Cantidad de manchas alargadas tipo "violín"
+    violin_line_count = np.random.choice(
+        [0, 1, 2],
+        p=[0.70, 0.25, 0.05]
+    ) 
+    # Intensidad de las manchas alargadas tipo "violín"
+    violin_intensity = random.uniform(0.1, 1.0)
+    # Rango porcentual de longitud de las manchas alargadas tipo "violín"
+    violin_length_range = (0.05, 0.7)
 
     img = add_realistic_noise(
             img, 
@@ -93,6 +102,9 @@ for nro in tqdm(range(total)):
             speck_count=speck_count,
             speck_size=speck_size,
             blur_ksize=blur_kernel_size,
+            violin_line_count=violin_line_count,
+            violin_intensity=violin_intensity,
+            violin_length_range=violin_length_range
         )
 
     # Guardar imagen sintetica

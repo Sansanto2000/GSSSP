@@ -288,6 +288,9 @@ def add_realistic_noise(
     speck_count: int = 10,
     speck_size: int = 3,
     blur_ksize: int = 3,
+    violin_line_count: int = 0,
+    violin_intensity = 0.7,
+    violin_length_range = (0.05, 0.7)
 ) -> NDArray[np.uint8]:
     """Añadir ruido realista a una imagen.
 
@@ -299,6 +302,10 @@ def add_realistic_noise(
     - speck_size {int}?: tamaño maximo de mancha de impuresa. Default 3.
     - blur_ksize {int}?: tamaño del kernel para desenfoque gaussiano. Debe ser impar, con 0 
     u otro valor invalido no se aplica ningun desenfoque. Default 3.
+    - violin_line_count {int}?: cantidad de manchas alargadas tipo "violín" a simular. Default 0.
+    - violin_intensity {float}?: intensidad de las manchas alargadas tipo "violín". Default 0.7.
+    - violin_length_range {Tuple[float, float]}?: rango porcentual de longitud de las manchas 
+    alargadas tipo "violín". Default (0.05, 0.7).
     """
     img_noisy = img.astype(np.float32)
 
@@ -318,7 +325,34 @@ def add_realistic_noise(
         color = np.random.randint(150, 255)  # blanco sucio
         cv2.circle(img_noisy, (cx, cy), radius, (color,) * 3, cv2.FILLED)
 
-    # 4. Desenfoque suave (simula ópticas imperfectas)
+    # 4. Manchas alargadas
+    violin_sigma: float = 6.0
+    h, w = img.shape[:2]
+    for _ in range(violin_line_count):
+        violin_length_ratio: float = np.random.uniform(*violin_length_range)
+
+        # Centro x, y aleatorio
+        y0 = np.random.randint(0, h)
+        # Centro horizontal (evita bordes)
+        x0 = np.random.randint(int(w * 0.1), int(w * 0.9)+1)
+
+        # Largo horizontal (no llega a bordes)
+        L = int(w * violin_length_ratio)
+        sigma_x = L / 3
+
+        # Grilla de coordenadas
+        yy, xx = np.meshgrid(np.arange(h), np.arange(w), indexing="ij")
+        # Gaussiana 2D estirada horizontalmente
+        gaussian_2d = 255 * violin_intensity * np.exp(
+            -(
+                ((yy - y0) ** 2) / (2 * violin_sigma ** 2) +
+                ((xx - x0) ** 2) / (2 * sigma_x ** 2)
+            )
+        )
+        # Aplicar
+        img_noisy += np.stack([gaussian_2d]*3, axis=-1)
+
+    # 5. Desenfoque suave (simula ópticas imperfectas)
     if blur_ksize >= 3 and blur_ksize % 2 == 1:
         img_noisy = cv2.GaussianBlur(img_noisy, (blur_ksize, blur_ksize), 0)
 
