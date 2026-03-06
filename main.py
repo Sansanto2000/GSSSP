@@ -57,6 +57,12 @@ for nro in tqdm(range(total)):
             "y": pos_y + random.uniform(-noise_vertical, noise_vertical), 
         }
         targets.append(coor)
+    # eliminar targets con probabilidad 0.10
+    filtered_targets = [t for t in targets if random.random() > 0.10]
+    # garantizar que quede al menos 1
+    if len(filtered_targets) == 0 and len(targets) > 0:
+        filtered_targets.append(random.choice(targets))
+    targets = filtered_targets
 
     labels = []
     for coor in targets:

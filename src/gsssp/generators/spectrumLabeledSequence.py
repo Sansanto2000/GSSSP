@@ -50,10 +50,10 @@ class SpectrumLabeledSequence(Sequence):
       height_range = (1000, 4000), 
       width_range = (1000, 4000), 
       gray_value_range = (0, 0.15), 
-      angle_range = (-5, 5), 
+      angle_range = (-3, 3), 
       opening_lamp_range = (0.1, 0.45), 
       distance_between_components_range = (0.001, 0.1),
-      distance_between_observations_range = (0.05, 0.8), 
+      distance_between_observations_range = (0.05, 0.4), 
       cant_observations_max = 5,
       noise_horizontal = 0.01, 
       noise_vertical = 0.01, 
@@ -154,6 +154,12 @@ class SpectrumLabeledSequence(Sequence):
           "y": pos_y + random.uniform(-noise_vertical, noise_vertical), 
         }
         targets.append(coor)
+      # eliminar targets con probabilidad 0.10
+      filtered_targets = [t for t in targets if random.random() > 0.10]
+      # garantizar que quede al menos 1
+      if len(filtered_targets) == 0 and len(targets) > 0:
+        filtered_targets.append(random.choice(targets))
+      targets = filtered_targets
 
       ### Dibujar ###
       labels = []
