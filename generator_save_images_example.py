@@ -37,8 +37,9 @@ for batch_nro in tqdm(range(batch_cant)):
 
         if not success:
             print("¡Error al guardar la imagen! Verifica la ruta y permisos.")
-        
+
         # Convertir etiquetas a formato Yolov11
+        y = y.numpy()
         filtered = y[~np.all(y == 0, axis=1)]
         lines = map(labelListToYolov11Format, filtered)
     

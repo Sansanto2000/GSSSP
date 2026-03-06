@@ -7,7 +7,7 @@ import os
 import numpy as np
 import random
 import cv2
-from src.gsssp.observationArtist import drawObservation, add_realistic_noise, labelDictToYolov11Format
+from src.gsssp.observationArtist import Position, add_plate_edge, drawObservation, add_realistic_noise, edges_of_labels_relxywh, labelDictToYolov11Format
 import math
 from tqdm import tqdm
 
@@ -81,6 +81,16 @@ for nro in tqdm(range(total)):
             )
         labels.append(label)
 
+
+    ### Bordes de la placa ###
+    # Probabilidad de que se añada un borde a la placa
+    prob_edge = 0.1 
+    if(prob_edge > 0 and random.random() < prob_edge):
+        [x_min, x_max, y_min, y_max ] = edges_of_labels_relxywh(labels, alto, ancho)
+        side = random.choice([Position.RIGHT, Position.LEFT, Position.TOP, Position.BOTTOM])
+        img = add_plate_edge(img, (x_min, x_max, y_min, y_max), side)
+
+    ### Ruido ###
     # Ruido gaussiano general para la imagen de la placa
     gaussian_std = random.uniform(4.0, 16.0)
     # Ruido de banda horizontal

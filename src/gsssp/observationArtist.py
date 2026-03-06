@@ -4,6 +4,7 @@ from numpy.typing import NDArray
 from typing import Any, Callable, Tuple
 import numpy as np
 import cv2
+from enum import Enum
 
 def drawObservation(
         img: NDArray[np.uint8], 
@@ -385,3 +386,115 @@ def labelListToYolov11Format(label) -> str:
     - {str}: información de la etiqueta en formato textual
     """
     return f"{label[0]} {label[1]:.6f} {label[2]:.6f} {label[3]:.6f} {label[4]:.6f}"
+
+def edges_of_labels_relxywh(labels, alto, ancho):
+        """dado un conjunto de etiquetas en formato dict relxywh y un
+        ancho y alto de imagen determina en pixeles los limites 
+        [x_min, x_max, y_min, y_max] donde se mueven las etiquetas.
+
+        Args:
+            labels ([type]): conjunto de etiquetas en formato dict relxywh.
+            alto ([type]): alto de la imagen en pixeles.
+            ancho ([type]): ancho de la imagen en pixeles.
+
+        Returns:
+            int[]: [x_min, x_max, y_min, y_max] limites en pixeles donde 
+            se mueven las etiquetas.
+        """
+        min_x = ancho
+        max_x = 0
+        min_y = alto
+        max_y = 0
+        for label in labels:
+          x_center = label['x_center_norm'] * ancho
+          y_center = label['y_center_norm'] * alto
+          width = label['width_norm'] * ancho
+          height = label['height_norm'] * alto
+          
+          x_min = x_center - width/2
+          x_max = x_center + width/2
+          y_min = y_center - height/2
+          y_max = y_center + height/2
+          if x_min < min_x:
+            min_x = x_min
+          if x_max > max_x:
+            max_x = x_max
+          if y_max > max_y:
+            max_y = y_max
+          if y_min < min_y:
+            min_y = y_min
+        return [min_x, max_x, min_y, max_y]
+
+class Position(Enum):
+    RIGHT = 0
+    LEFT = 1
+    TOP = 2
+    BOTTOM = 3
+
+def add_plate_edge(img, edges, position:Position):
+    """Agrega un borde a la placa basado en los limites de las etiquetas.
+
+    Args:
+        img (NDArray[np.uint8]): imagen a modificar.
+        edges (tupla): (x_min, x_max, y_min, y_max) limites en pixeles donde 
+        se mueven las etiquetas.
+        color (str): color del borde a agregar.
+
+    Returns:
+        NDArray[np.uint8]: imagen con el borde agregado.
+    """
+
+    h, w = img.shape[:2]
+    x_min, x_max, y_min, y_max = edges
+    margin = 0.7
+    # color del fondo "de atrás"
+    gray = random.randint(50, 155)
+    bg_color = (gray, gray, gray)
+    # color de la línea límite
+    angle_noise = int(min(w, h) * 0.02)
+    shift = random.randint(-angle_noise, angle_noise)
+
+    match position:
+        case Position.RIGHT:
+            max_thickness = int((w - x_max) * (1 - margin))
+            thickness = random.randint(0, int(max_thickness))
+            pts = np.array([
+                [w-thickness, 0],
+                [w, 0],
+                [w, h],
+                [w-thickness + shift, h]
+            ])
+            cv2.fillPoly(img, [pts], bg_color)
+        case Position.LEFT:
+            max_thickness = int(x_min * (1 - margin))
+            thickness = random.randint(0, int(max_thickness))
+            pts = np.array([
+                [0, 0],
+                [thickness, 0],
+                [thickness + shift, h],
+                [0, h]
+            ])
+            cv2.fillPoly(img, [pts], bg_color)
+        case Position.TOP:
+            max_thickness = int(y_min * (1 - margin))
+            thickness = random.randint(0, int(max_thickness))
+            pts = np.array([
+                [0, 0],
+                [w, 0],
+                [w, thickness],
+                [0, thickness + shift]
+            ])
+            cv2.fillPoly(img, [pts], bg_color)
+        case Position.BOTTOM:
+            max_thickness = int((h - y_max) * (1 - margin))
+            thickness = random.randint(0, int(max_thickness))
+            pts = np.array([
+                [0, h],
+                [w, h],
+                [w, h-thickness],
+                [0, h-thickness + shift]
+            ])
+            cv2.fillPoly(img, [pts], bg_color)
+           
+
+    return img

@@ -1,6 +1,6 @@
 from keras.utils import Sequence
 import numpy as np
-from src.gsssp.observationArtist import drawObservation, add_realistic_noise
+from src.gsssp.observationArtist import Position, add_plate_edge, drawObservation, add_realistic_noise, edges_of_labels_relxywh
 import random
 import numpy as np
 import math
@@ -39,6 +39,7 @@ class SpectrumLabeledSequence(Sequence):
   - speck_size_range: rango de tamaño de las manchas de polvo.
   - blur_kernel_size_options: lista de opciones enteras para el tamaño del kernel de 
   desenfoque.
+  - prob_edge: probabilidad de que se añada un borde a la placa.
   - batch_size: cantidad de elementos por lote.
   - resize_shape: dimensiones (ancho, alto) para las imagenes finales.
   - max_predictions: cantidad maxima de predicciones que puede haber en una imagen.
@@ -68,6 +69,7 @@ class SpectrumLabeledSequence(Sequence):
       violin_line_include:bool = True,
       violin_intensity_range = (0.1, 1.0),
       violin_length_range = (0.05, 0.7),
+      prob_edge = 0.1,
       output_format:OutputFormat = OutputFormat.LIST,
       batchs_per_sequence = 100,
       **kwargs
@@ -97,6 +99,7 @@ class SpectrumLabeledSequence(Sequence):
     self.batchs_per_sequence = batchs_per_sequence
     self.violin_intensity_range = violin_intensity_range
     self.violin_length_range = violin_length_range
+    self.prob_edge = prob_edge
 
   # Number of batch in the Sequence.
   def __len__(self):
@@ -179,6 +182,12 @@ class SpectrumLabeledSequence(Sequence):
         )
         labels.append(label)
 
+      ### Bordes de la placa ###
+      if(self.prob_edge > 0 and random.random() < self.prob_edge):
+        [x_min, x_max, y_min, y_max ] = edges_of_labels_relxywh(labels, alto, ancho)
+        side = random.choice([Position.RIGHT, Position.LEFT, Position.TOP, Position.BOTTOM])
+        img = add_plate_edge(img, (x_min, x_max, y_min, y_max), side)
+
       ### Ruido y manchas ###
       # Ruido gaussiano general para la imagen de la placa
       gaussian_std = random.uniform(*self.gaussian_std_range)
@@ -212,9 +221,7 @@ class SpectrumLabeledSequence(Sequence):
         violin_length_range=violin_length_range
       )
 
-      # 1. Normalización de la imagen para YOLO
-      #img_normalized = img.astype('float32') / 255.0
-      # 2. Redimensionar imagen
+      # Redimensionar imagen
       img = cv2.resize(img, (self.resize_shape[0], self.resize_shape[1]))
       batch_x.append(img)
       
